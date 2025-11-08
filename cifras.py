@@ -70,9 +70,6 @@ def actualizar_lista(operacion, cifras):
     if not (operando1 in cifras and operando2 in cifras):
         print("Las cifras no están entre las cifras disponibles")
         return
-    
-    cifras.remove(operando1)
-    cifras.remove(operando2)
 
     match simbolo:
         case "+":
@@ -84,7 +81,11 @@ def actualizar_lista(operacion, cifras):
         case "/":
             if operando1 % operando2 != 0:
                 print("La división tiene que ser entera")
+                return
             cifras.append(operando1 / operando2)
+
+    cifras.remove(operando1)
+    cifras.remove(operando2)
 
     return cifras
 
