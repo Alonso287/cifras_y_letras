@@ -6,7 +6,7 @@ def main():
     cifras_posibles = generar_cifras_posibles()
     while True:
         try:
-            dificultad = int(input("Selecciona dificultad (1-5). Ctrl-D para usar el algoritmo antiguo.\n"))
+            dificultad = int(input("Selecciona dificultad (1-5). Ctrl-Z + Enter para usar el algoritmo antiguo.\n"))
             if not (1 <= dificultad <= 5):
                 raise Exception
             break
@@ -25,7 +25,7 @@ def main():
         try:
             print(f"Objetivo: {objetivo}")
             print(f"Cifras disponibles:{cifras_disponibles}")
-            print("Ctrl-D para terminar.")
+            print("Ctrl-Z + Enter para terminar.")
             actualizar_lista(input(), cifras_disponibles)
         except EOFError:
             break
@@ -118,6 +118,10 @@ def actualizar_lista(operacion, cifras):
     
     if simbolo == "/" and operando1 % operando2 != 0:               # Si la operación es una división y ésta no es entera
         print("La división tiene que ser entera")
+        return
+    
+    if operar([operando1, simbolo, operando2]) < 0:
+        print("La resta no puede ser negativa")
         return
 
     cifras.append(operar([operando1, simbolo, operando2]))
