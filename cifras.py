@@ -40,7 +40,7 @@ def generar_datos_jugador(dificultad=None):
     Genera el número a alcanzar.
     
     Argumentos opcionales:
-    - Dificultad: Recibe un int, y es el número de pasos que el algoritmo hará para generar un objetivo. Tiene que estar entre 1 y 5.
+    - Dificultad: Recibe un int entre 1 y 5, que será el número de pasos que el algoritmo hará para generar un objetivo.
     """
     if not dificultad:
         return random.randint(100, 999), generar_cifras_disponibles()
@@ -80,12 +80,12 @@ def verificar_operacion_generador(operando1, operacion, operando2):
 
 
 def generar_cifras_disponibles():
-    """Genera una lista con los 6 números con los que llegar al objetivo"""
+    """Genera una lista aleatoria con los 6 números pertenecientes a la lista de cifras posibles"""
     return random.choices(cifras_posibles, k=6)
 
 
 def verificar_operacion_jugador(entrada):
-    """Devuelve True si la operación introducida tiene el formato correcto ("... + ...", "... / ...", etc.)"""
+    """Devuelve True si la operación introducida tiene el formato correcto"""
     return True if re.search(r"^(\d+) ?([+|\-|*|/]) ?(\d+)$", entrada) else False
 
 
@@ -132,6 +132,7 @@ def actualizar_lista(operacion, cifras):
 
 
 def calcular_distancia(cifras_disponibles, objetivo):
+    """Devuelve la diferencia entre el objetivo y el número más cercano a éste"""
     distancia = objetivo - cifras_disponibles[0]
     for cifra in cifras_disponibles:
         if abs(objetivo - cifra) < distancia:
@@ -140,7 +141,7 @@ def calcular_distancia(cifras_disponibles, objetivo):
 
 
 def operar(operando1, operacion, operando2):
-    """Devuelve el resultado de una operación, el argumento tiene que ser una lista en formato [operando1, símbolo, operando2]"""
+    """Devuelve el resultado de una operación, siendo `operando1` y `operando2` números y `operacion` la operación que se desea hacer"""
     match operacion:
         case "+":
             return operando1 + operando2
@@ -153,6 +154,7 @@ def operar(operando1, operacion, operando2):
 
 
 def inicializar_cifras():
+    """Iinicializa las reglas que usaránl las demás funciones: `cifras_pequeñas`, `cifras_grandes`, `cifras_posibles` y `operaciones`"""
     global cifras_pequeñas
     global cifras_grandes
     global cifras_posibles
