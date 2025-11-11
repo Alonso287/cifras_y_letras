@@ -3,7 +3,7 @@ import re
 
 
 def main():
-    cifras_posibles = generar_cifras_posibles()
+    inicializar_cifras()
     while True:
         try:
             dificultad = int(input("Selecciona dificultad (1-5). Ctrl-Z + Enter para usar el algoritmo antiguo.\n"))
@@ -15,9 +15,7 @@ def main():
             break
         except Exception:
             continue
-    while not (objetivo := generar_objetivo(dificultad, cifras_disponibles :=generar_cifras_disponibles(cifras_posibles))):
-        objetivo = generar_objetivo(dificultad, cifras_disponibles)
-        cifras_disponibles = generar_cifras_disponibles(cifras_posibles)
+    objetivo, cifras_disponibles = generar_datos_jugador(dificultad)
 
     print(f"Cifras posibles: {cifras_posibles}")
 
@@ -37,55 +35,56 @@ def main():
         print(f"Distancia: {calcular_distancia(cifras_disponibles, objetivo)}")
 
 
-def generar_cifras_posibles():
-    """Devuelve una lista con los números del 1-10 y 35, 50, 75 y 100"""
-    return list(range(1, 11)) + [25, 50, 75, 100]
-
-
-def generar_objetivo(dificultad=None, cifras_disponibles=None):
+def generar_datos_jugador(dificultad=None):
     """
-    Genera el número a alcanzar
+    Genera el número a alcanzar.
     
     Argumentos opcionales:
-    - Dificultad: Recibe un int, y es el número de pasos que el algoritmo hará para generar un objetivo a partir de la lista de números disponibles obtenida. Tiene que estar entre 0 y 5.
+    - Dificultad: Recibe un int, y es el número de pasos que el algoritmo hará para generar un objetivo. Tiene que estar entre 1 y 5.
     """
-    cifras_disponibles = cifras_disponibles.copy()
-    if dificultad == None or cifras_disponibles == None:
-        return random.randint(100, 999)
-    
-    operaciones = ["+", "-", "/", "*"]
-    cifras_disponibles.remove(objetivo := random.choice(cifras_disponibles))    # Elige el primer objetivo y lo elimina de los números disponibles
-    for _ in range(dificultad):
-        operando2 = random.choice(cifras_disponibles)                           # Elige el segundo objetivo
+    if not dificultad:
+        return random.randint(100, 999), generar_cifras_disponibles()
 
-        operacion = random.choice(operaciones)                                  # Elige una operación aleatoria
+    exito = False
 
-        # Si la operación elegida es una división y el resultado no es entero, se elige otra operación
-        # También se elige otra operación si el resultado de la operación es menor que 1
+    while not exito:
+        # Se genera la lista de números disponibles cada intento
+        cifras_disponibles = generar_cifras_disponibles()
+        cifras_disponibles_return = cifras_disponibles.copy()
+        # Se elige el número del que partir y lo elimina de la cifras_disponibles
+        operando1 = random.choice(cifras_disponibles)
+        cifras_disponibles.remove(operando1)
 
-        # Edge case: El resultado no está entre el rango permitido de 100-999 con dificultades altas, y el bucle se queda atascado.
-        # Para esos casos se irá contando y si se hacen todas las combinaciones posibles se interrumpirá el bucle y se usará el objetivo anterior.
-        count = 0
-        while operacion == "/" and objetivo % operando2 != 0 or not 100 <= operar([objetivo, operacion, operando2]) <= 999:
-            count+=1
-            operacion = random.choice(operaciones)
+        # Se inicia un bucle que se repite tantas veces como dificultad se haya pedido, 1-5
+        for _ in range(dificultad):
+            # Se elige una operación al azar y un segundo operando
+            operacion  = random.choice(operaciones)
             operando2 = random.choice(cifras_disponibles)
+            
+            if verificar_operacion_generador(operando1, operacion, operando2):
+                operando1 = int(operar(operando1, operacion, operando2))
+                cifras_disponibles.remove(operando2)
+                exito = True
+            else:
+                exito = False
+                break
+        if exito == True:
+            return operando1, cifras_disponibles_return
+        
 
-            if count == 24:
-                return
-
-        cifras_disponibles.remove(operando2)                        # Elimina el segundo operando
-        objetivo = int(operar([objetivo, operacion, operando2]))    # Actualiza el objetivo
-    return objetivo
-
+def verificar_operacion_generador(operando1, operacion, operando2):
+    """Verifica si la operación que se desea hacer está dentro de los límites, para uso del algoritmo de generación."""
+    if operacion == "/":
+        return True if operando1 % operando2 == 0 and 100 <= operar(operando1, operacion, operando2) <= 999 else False
+    return 100 <= operar(operando1, operacion, operando2) <= 999
 
 
-def generar_cifras_disponibles(cifras):
+def generar_cifras_disponibles():
     """Genera una lista con los 6 números con los que llegar al objetivo"""
-    return random.choices(cifras, k=6)
+    return random.choices(cifras_posibles, k=6)
 
 
-def verificar_operacion(entrada):
+def verificar_operacion_jugador(entrada):
     """Devuelve True si la operación introducida tiene el formato correcto ("... + ...", "... / ...", etc.)"""
     return True if re.search(r"^(\d+) ?([+|\-|*|/]) ?(\d+)$", entrada) else False
 
@@ -107,7 +106,7 @@ def actualizar_lista(operacion, cifras):
     Devuelve la lista actualizada con la operación hecha
     """
 
-    if not verificar_operacion(operacion):                          # Si la operación no es válida
+    if not verificar_operacion_jugador(operacion):                          # Si la operación no es válida
         print("La operación introducida no es correcta")
         return
 
@@ -120,11 +119,11 @@ def actualizar_lista(operacion, cifras):
         print("La división tiene que ser entera")
         return
     
-    if operar([operando1, simbolo, operando2]) < 0:
+    if operar(operando1, simbolo, operando2) < 0:
         print("La resta no puede ser negativa")
         return
 
-    cifras.append(operar([operando1, simbolo, operando2]))
+    cifras.append(operar(operando1, simbolo, operando2))
 
     cifras.remove(operando1)
     cifras.remove(operando2)
@@ -140,17 +139,28 @@ def calcular_distancia(cifras_disponibles, objetivo):
     return distancia
 
 
-def operar(operacion):
+def operar(operando1, operacion, operando2):
     """Devuelve el resultado de una operación, el argumento tiene que ser una lista en formato [operando1, símbolo, operando2]"""
-    match operacion[1]:
+    match operacion:
         case "+":
-            return operacion[0] + operacion[2]
+            return operando1 + operando2
         case "-":
-            return operacion[0] - operacion[2]
+            return operando1 - operando2
         case "*":
-            return operacion[0] * operacion[2]
+            return operando1 * operando2
         case "/":
-            return operacion[0] / operacion[2]
+            return operando1 / operando2
+
+
+def inicializar_cifras():
+    global cifras_pequeñas
+    global cifras_grandes
+    global cifras_posibles
+    global operaciones
+    cifras_pequeñas = (tuple(range(1,11)))
+    cifras_grandes = (25, 50, 75, 100)
+    cifras_posibles = cifras_pequeñas + cifras_grandes
+    operaciones = ("+", "-", "/", "*")
 
 
 if __name__ == "__main__":
