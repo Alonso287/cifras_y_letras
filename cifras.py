@@ -6,7 +6,7 @@ def main():
     inicializar_cifras()
     while True:
         try:
-            dificultad = int(input("Selecciona dificultad (1-5). Ctrl-Z + Enter para usar el algoritmo antiguo.\n"))
+            dificultad = int(input("Selecciona dificultad (1-5).\nCtrl-Z + Enter para usar el algoritmo antiguo.\n"))
             if not (1 <= dificultad <= 5):
                 raise Exception
             break
@@ -15,7 +15,20 @@ def main():
             break
         except Exception:
             continue
-    objetivo, cifras_disponibles = generar_datos_jugador(dificultad)
+
+    while True:
+        try:
+            numeros_pequeños = int(input("Elige la cantidad de números pequeños (Entre 1 y 10) que quieras\nCtrl-Z + Enter para una selección aleatoria\n"))
+            if 0 <= numeros_pequeños <= 6:
+                break
+        except EOFError:
+            numeros_pequeños = None
+            break
+        except Exception:
+            print("La cantidad debe estar entre 0 y 6")
+            continue
+
+    objetivo, cifras_disponibles = generar_datos_jugador(dificultad, numeros_pequeños)
 
     print(f"Cifras posibles: {cifras_posibles}")
 
@@ -35,7 +48,7 @@ def main():
         print(f"Distancia: {calcular_distancia(cifras_disponibles, objetivo)}")
 
 
-def generar_datos_jugador(dificultad=None):
+def generar_datos_jugador(dificultad=None, numeros_pequeños=None):
     """
     Genera el número a alcanzar.
     
@@ -43,13 +56,13 @@ def generar_datos_jugador(dificultad=None):
     - Dificultad: Recibe un int entre 1 y 5, que será el número de pasos que el algoritmo hará para generar un objetivo.
     """
     if not dificultad:
-        return random.randint(100, 999), generar_cifras_disponibles()
+        return random.randint(100, 999), generar_cifras_disponibles(numeros_pequeños)
 
     exito = False
 
     while not exito:
         # Se genera la lista de números disponibles cada intento
-        cifras_disponibles = generar_cifras_disponibles()
+        cifras_disponibles = generar_cifras_disponibles(numeros_pequeños)
         cifras_disponibles_return = cifras_disponibles.copy()
         # Se elige el número del que partir y lo elimina de la cifras_disponibles
         operando1 = random.choice(cifras_disponibles)
@@ -79,8 +92,13 @@ def verificar_operacion_generador(operando1, operacion, operando2):
     return 100 <= operar(operando1, operacion, operando2) <= 999
 
 
-def generar_cifras_disponibles():
-    """Genera una lista aleatoria con los 6 números pertenecientes a la lista de cifras posibles"""
+def generar_cifras_disponibles(numeros_pequeños=None):
+    """
+    Genera una lista aleatoria con los 6 números pertenecientes a la lista de cifras posibles.
+    Recoge un parámetro opcional `numeros_pequeños`, que indica la cantidad de números pequeños que habrá en la lista de salida
+    """
+    if numeros_pequeños or numeros_pequeños == 0:
+        return random.choices(cifras_pequeñas_posibles, k=numeros_pequeños) + random.choices(cifras_grandes_posibles, k=6-numeros_pequeños)
     return random.choices(cifras_posibles, k=6)
 
 
@@ -155,13 +173,13 @@ def operar(operando1, operacion, operando2):
 
 def inicializar_cifras():
     """Iinicializa las reglas que usaránl las demás funciones: `cifras_pequeñas`, `cifras_grandes`, `cifras_posibles` y `operaciones`"""
-    global cifras_pequeñas
-    global cifras_grandes
+    global cifras_pequeñas_posibles
+    global cifras_grandes_posibles
     global cifras_posibles
     global operaciones
-    cifras_pequeñas = (tuple(range(1,11)))
-    cifras_grandes = (25, 50, 75, 100)
-    cifras_posibles = cifras_pequeñas + cifras_grandes
+    cifras_pequeñas_posibles = (tuple(range(1,11)))
+    cifras_grandes_posibles = (25, 50, 75, 100)
+    cifras_posibles = cifras_pequeñas_posibles + cifras_grandes_posibles
     operaciones = ("+", "-", "/", "*")
 
 
