@@ -4,48 +4,10 @@ import re
 
 def main():
     inicializar_cifras()
-    while True:
-        try:
-            dificultad = int(input("Selecciona dificultad (1-5).\nCtrl-Z + Enter para usar el algoritmo antiguo.\n"))
-            if not (1 <= dificultad <= 5):
-                raise Exception
-            break
-        except EOFError:
-            dificultad = None
-            break
-        except Exception:
-            continue
-
-    while True:
-        try:
-            numeros_pequeños = int(input("Elige la cantidad de números pequeños (Entre 1 y 10) que quieras\nCtrl-Z + Enter para una selección aleatoria\n"))
-            if 0 <= numeros_pequeños <= 6:
-                break
-        except EOFError:
-            numeros_pequeños = None
-            break
-        except Exception:
-            print("La cantidad debe estar entre 0 y 6")
-            continue
-
-    objetivo, cifras_disponibles = generar_datos_jugador(dificultad, numeros_pequeños)
-
-    print(f"Cifras posibles: {cifras_posibles}")
-
-    while len(cifras_disponibles) != 1 and not objetivo in cifras_disponibles:
-        try:
-            print(f"Objetivo: {objetivo}")
-            print(f"Cifras disponibles:{cifras_disponibles}")
-            print("Ctrl-Z + Enter para terminar.")
-            actualizar_lista(input(), cifras_disponibles)
-        except EOFError:
-            break
-
-    if objetivo in cifras_disponibles:
-        print("Enhorabuena! Has llegado al objetivo")
-    else:
-        print("Mala suerte! No has llegado al objetivo")
-        print(f"Distancia: {calcular_distancia(cifras_disponibles, objetivo)}")
+    dificultad = preguntar_dificuldad()
+    numeros_pequeños = preguntar_numeros_pequeños()
+    objetivo, cifras_disponibles = jugar_cifras(dificultad, numeros_pequeños)
+    mostrar_resultados(objetivo, cifras_disponibles)
 
 
 def generar_datos_jugador(dificultad=None, numeros_pequeños=None):
@@ -158,7 +120,7 @@ def calcular_distancia(cifras_disponibles, objetivo):
     return distancia
 
 
-def operar(operando1, operacion, operando2):
+def operar(operando1, operacion, operando2) -> int:
     """Devuelve el resultado de una operación, siendo `operando1` y `operando2` números y `operacion` la operación que se desea hacer"""
     match operacion:
         case "+":
@@ -172,7 +134,7 @@ def operar(operando1, operacion, operando2):
 
 
 def inicializar_cifras():
-    """Iinicializa las reglas que usaránl las demás funciones: `cifras_pequeñas`, `cifras_grandes`, `cifras_posibles` y `operaciones`"""
+    """Inicializa las reglas que usarán las demás funciones: `cifras_pequeñas`, `cifras_grandes`, `cifras_posibles` y `operaciones`"""
     global cifras_pequeñas_posibles
     global cifras_grandes_posibles
     global cifras_posibles
@@ -181,6 +143,59 @@ def inicializar_cifras():
     cifras_grandes_posibles = (25, 50, 75, 100)
     cifras_posibles = cifras_pequeñas_posibles + cifras_grandes_posibles
     operaciones = ("+", "-", "/", "*")
+
+
+
+def preguntar_dificuldad():
+    while True:
+        try:
+            dificultad = int(input("Selecciona dificultad (1-5).\nCtrl-Z + Enter para usar el algoritmo antiguo.\n"))
+            if not (1 <= dificultad <= 5):
+                raise Exception
+            break
+        except EOFError:
+            dificultad = None
+            break
+        except Exception:
+            continue
+    return dificultad
+
+
+def preguntar_numeros_pequeños():
+    while True:
+        try:
+            numeros_pequeños = int(input("Elige la cantidad de números pequeños (Entre 1 y 10) que quieras\nCtrl-Z + Enter para una selección aleatoria\n"))
+            if 0 <= numeros_pequeños <= 6:
+                break
+        except EOFError:
+            numeros_pequeños = None
+            break
+        except Exception:
+            print("La cantidad debe estar entre 0 y 6")
+            continue
+    return numeros_pequeños
+
+
+def jugar_cifras(dificultad, numeros_pequeños):
+    objetivo, cifras_disponibles = generar_datos_jugador(dificultad, numeros_pequeños)
+
+    while len(cifras_disponibles) != 1 and not objetivo in cifras_disponibles:
+        try:
+            print(f"Objetivo: {objetivo}")
+            print(f"Cifras disponibles:{cifras_disponibles}")
+            print("Introduce tu palabra. Ctrl-Z + Enter para terminar.")
+            actualizar_lista(input(), cifras_disponibles)
+        except EOFError:
+            break
+    return objetivo, cifras_disponibles
+
+
+def mostrar_resultados(objetivo, cifras_disponibles):
+    if objetivo in cifras_disponibles:
+        print("¡Enhorabuena! Has llegado al objetivo")
+    else:
+        print("¡Mala suerte! No has llegado al objetivo")
+        print(f"Distancia: {calcular_distancia(cifras_disponibles, objetivo)}")
 
 
 if __name__ == "__main__":
