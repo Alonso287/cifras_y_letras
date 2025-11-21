@@ -120,7 +120,7 @@ def calcular_distancia(cifras_disponibles, objetivo):
     return distancia
 
 
-def operar(operando1, operacion, operando2) -> int:
+def operar(operando1, operacion, operando2):
     """Devuelve el resultado de una operación, siendo `operando1` y `operando2` números y `operacion` la operación que se desea hacer"""
     match operacion:
         case "+":
