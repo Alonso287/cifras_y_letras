@@ -1,7 +1,7 @@
 import requests
 import random
 
-def main():
+def jugar():
     inicializar_variables()
     while True:
         try:
@@ -39,32 +39,32 @@ def main():
         print(f"¡Mala suerte! La palabra {palabra} no está en el Diccionario de la Real Academia Española")
 
 def inicializar_variables():
-    global consonantes
-    global vocales
-    global letras
-    global url
-    consonantes = ("b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "ñ", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z")
-    vocales = ("a", "e", "i", "o", "u")
-    letras = consonantes + vocales
-    url = "https://rae-api.com/api/words/"
+    global CONSONANTES
+    global VOCALES
+    global LETRAS
+    global URL
+    CONSONANTES = ("b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "ñ", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z")
+    VOCALES = ("a", "e", "i", "o", "u")
+    LETRAS = CONSONANTES + VOCALES
+    URL = "https://rae-api.com/api/words/"
 
 
 def generar_letras_disponibles(vocales_jugador=None, modo_anagrama= False):
     if vocales_jugador == None:
         vocales_jugador = random.randint(3,6)
     if not modo_anagrama:
-        return random.choices(vocales, k=vocales_jugador) + random.choices(consonantes, k=10 - vocales_jugador)
+        return random.choices(VOCALES, k=vocales_jugador) + random.choices(CONSONANTES, k=10 - vocales_jugador)
     palabra = list(quitar_tildes(requests.get("https://rae-api.com/api/random?max_length=10").json()["data"]["word"]))
     random.shuffle(palabra)
     return palabra
 
 
 def buscar_palabra(palabra):
-    return requests.get(url + palabra).json()["ok"]
+    return requests.get(URL + palabra).json()["ok"]
 
 
 def significados(palabra):
-    respuesta = requests.get(url + palabra).json()
+    respuesta = requests.get(URL + palabra).json()
     try:
         origen = respuesta["data"]["meanings"][0]["origin"]["raw"]
     except:

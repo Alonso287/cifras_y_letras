@@ -2,7 +2,7 @@ import random
 import re
 
 
-def main():
+def jugar():
     inicializar_cifras()
     dificultad = preguntar_dificuldad()
     numeros_pequeños = preguntar_numeros_pequeños()
@@ -33,7 +33,7 @@ def generar_datos_jugador(dificultad=None, numeros_pequeños=None):
         # Se inicia un bucle que se repite tantas veces como dificultad se haya pedido, 1-5
         for _ in range(dificultad):
             # Se elige una operación al azar y un segundo operando
-            operacion  = random.choice(operaciones)
+            operacion  = random.choice(OPERACIONES)
             operando2 = random.choice(cifras_disponibles)
             
             if verificar_operacion_generador(operando1, operacion, operando2):
@@ -60,8 +60,8 @@ def generar_cifras_disponibles(numeros_pequeños=None):
     Recoge un parámetro opcional `numeros_pequeños`, que indica la cantidad de números pequeños que habrá en la lista de salida
     """
     if numeros_pequeños or numeros_pequeños == 0:
-        return random.choices(cifras_pequeñas_posibles, k=numeros_pequeños) + random.choices(cifras_grandes_posibles, k=6-numeros_pequeños)
-    return random.choices(cifras_posibles, k=6)
+        return random.choices(CIFRAS_PEQUEÑAS_POSIBLES, k=numeros_pequeños) + random.choices(CIFRAS_GRANDES_POSIBLES, k=6-numeros_pequeños)
+    return random.choices(CIFRAS_POSIBLES, k=6)
 
 
 def verificar_operacion_jugador(entrada):
@@ -86,7 +86,7 @@ def actualizar_lista(operacion, cifras):
     Devuelve la lista actualizada con la operación hecha
     """
 
-    if not verificar_operacion_jugador(operacion):                          # Si la operación no es válida
+    if not verificar_operacion_jugador(operacion):                  # Si la operación no es válida
         print("La operación introducida no es correcta")
         return
 
@@ -135,14 +135,14 @@ def operar(operando1, operacion, operando2):
 
 def inicializar_cifras():
     """Inicializa las reglas que usarán las demás funciones: `cifras_pequeñas`, `cifras_grandes`, `cifras_posibles` y `operaciones`"""
-    global cifras_pequeñas_posibles
-    global cifras_grandes_posibles
-    global cifras_posibles
-    global operaciones
-    cifras_pequeñas_posibles = (tuple(range(1,11)))
-    cifras_grandes_posibles = (25, 50, 75, 100)
-    cifras_posibles = cifras_pequeñas_posibles + cifras_grandes_posibles
-    operaciones = ("+", "-", "/", "*")
+    global CIFRAS_PEQUEÑAS_POSIBLES
+    global CIFRAS_GRANDES_POSIBLES
+    global CIFRAS_POSIBLES
+    global OPERACIONES
+    CIFRAS_PEQUEÑAS_POSIBLES = (tuple(range(1,11)))
+    CIFRAS_GRANDES_POSIBLES = (25, 50, 75, 100)
+    CIFRAS_POSIBLES = CIFRAS_PEQUEÑAS_POSIBLES + CIFRAS_GRANDES_POSIBLES
+    OPERACIONES = ("+", "-", "/", "*")
 
 
 
@@ -199,4 +199,4 @@ def mostrar_resultados(objetivo, cifras_disponibles):
 
 
 if __name__ == "__main__":
-    main()
+    jugar()
