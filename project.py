@@ -7,19 +7,25 @@ def main():
         respuesta = home()
         match respuesta:
             case "1":
-                print(respuesta)
+                cifras.jugar()
             case "2":
-                print(respuesta)
+                letras.jugar()
             case "3":
                 como_jugar()
             case "4":
                 sys.exit()
 
 def home():
+    """
+    Renderiza la UI del menú principal y pide al usuario una opción
+    
+    :return: str con la elección del usuario
+    :rtype: str
+    """
     os.system("cls")
     print(HOME)
     try:
-        respuesta = input()
+        respuesta = input("Elige una opción: ")
     except EOFError:
         sys.exit()
     return respuesta
@@ -63,7 +69,7 @@ Existen dos modos de juego: Cifras y Letras.
     - En el modo de juego \"Cifras\" se muestran 6 números aleatorios entre el 1 y el 10 o también 25, 50, 75 o 100; y otro número entre 100 y 999 que hay que alcanzar usando las operaciones matemáticas básicas (suma, resta, multiplicación y división). Podrás elegir la cantidad de números pequeños (Es decir, entre 1 y 10) que quieres antes de comenzar la ronda.
     - En el modo de juego \"Letras\" elegirás al principio de la prueba cuántas vocales quieres de un grupo de 10 letras, entre un mínimo de 3 y un máximo de 6, y tu objetivo será encontrar la palabra más larga
     
-Presiona Enter para volver""")
+Presiona Enter para volver...""")
 
 if __name__ == "__main__":
     main()

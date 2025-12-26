@@ -1,5 +1,5 @@
-import random
-import re
+import random, re
+from getpass import getpass
 
 
 def jugar():
@@ -8,6 +8,7 @@ def jugar():
     numeros_pequeños = preguntar_numeros_pequeños()
     objetivo, cifras_disponibles = jugar_cifras(dificultad, numeros_pequeños)
     mostrar_resultados(objetivo, cifras_disponibles)
+    getpass(prompt="Presiona Enter para volver...")
 
 
 def generar_datos_jugador(dificultad=None, numeros_pequeños=None):

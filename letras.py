@@ -1,5 +1,5 @@
-import requests
-import random
+import requests, random
+from getpass import getpass
 
 def jugar():
     inicializar_variables()
@@ -37,6 +37,8 @@ def jugar():
             print(f"{i+1}. {acepciones[i]}")
     else:
         print(f"¡Mala suerte! La palabra {palabra} no está en el Diccionario de la Real Academia Española")
+    
+    getpass(prompt="Presiona Enter para volver...")
 
 def inicializar_variables():
     global CONSONANTES
