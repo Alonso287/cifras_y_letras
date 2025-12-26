@@ -22,7 +22,7 @@ def home():
     :return: str con la elección del usuario
     :rtype: str
     """
-    os.system("cls")
+    os.system("cls" if os.name == "nt" else "clear")
     print(HOME)
     try:
         respuesta = input("Elige una opción: ")
@@ -31,7 +31,7 @@ def home():
     return respuesta
 
 def como_jugar():
-    os.system("cls")
+    os.system("cls" if os.name == "nt" else "clear")
     print(COMO_JUGAR)
     getpass(prompt="")
 
