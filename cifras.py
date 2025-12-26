@@ -152,7 +152,7 @@ def preguntar_dificuldad():
         try:
             dificultad = int(input("Selecciona dificultad (1-5).\nCtrl-Z + Enter para usar el algoritmo antiguo.\n" 
                                    if os.name == "nt" else
-                                   "Selecciona dificultad (1-5).\nCtrl-C para usar el algoritmo antiguo.\n"))
+                                   "Selecciona dificultad (1-5).\nCtrl-D para usar el algoritmo antiguo.\n"))
             if not (1 <= dificultad <= 5):
                 raise Exception
             break
@@ -169,7 +169,7 @@ def preguntar_numeros_pequeños():
         try:
             numeros_pequeños = int(input("Elige la cantidad de números pequeños (Entre 1 y 10) que quieras\nCtrl-Z + Enter para una selección aleatoria\n"
                                          if os.name == "nt" else
-                                         "Elige la cantidad de números pequeños (Entre 1 y 10) que quieras\nCtrl-C para una selección aleatoria\n"))
+                                         "Elige la cantidad de números pequeños (Entre 1 y 10) que quieras\nCtrl-D para una selección aleatoria\n"))
             if 0 <= numeros_pequeños <= 6:
                 break
         except EOFError:
@@ -188,9 +188,9 @@ def jugar_cifras(dificultad, numeros_pequeños):
         try:
             print(f"Objetivo: {objetivo}")
             print(f"Cifras disponibles:{cifras_disponibles}")
-            print("Introduce tu palabra. Ctrl-Z + Enter para terminar." 
+            print("Introduce tu operación. Ctrl-Z + Enter para terminar." 
                   if os.name == "nt" else
-                  "Introduce tu palabra. Ctrl-C para terminar.")
+                  "Introduce tu operación. Ctrl-D para terminar.")
             actualizar_lista(input(), cifras_disponibles)
         except EOFError:
             break
