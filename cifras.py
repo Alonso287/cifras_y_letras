@@ -72,7 +72,7 @@ def verificar_operacion_jugador(entrada):
 
 def extraer_operacion(entrada):
     """Devuelve una lista con el primer número de la operación, el símbolo de operación, y el segundo número de la operación"""
-    operacion = [i for i in re.search(r"^(\d+) ?([+|\-|*|/]) ?(\d+)$", entrada).groups()]
+    operacion = [i for i in re.search(r"^ *(\d+) *([+|\-|*|/]) *(\d+) *$", entrada).groups()]
     return [int(operacion[0]), operacion[1], int(operacion[2])]
 
 
