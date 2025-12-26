@@ -131,7 +131,7 @@ def operar(operando1, operacion, operando2):
         case "*":
             return operando1 * operando2
         case "/":
-            return operando1 / operando2
+            return int(operando1 / operando2)
 
 
 def inicializar_cifras():

@@ -58,6 +58,8 @@ def generar_letras_disponibles(vocales_jugador=None, modo_anagrama= False):
         return random.choices(VOCALES, k=vocales_jugador) + random.choices(CONSONANTES, k=10 - vocales_jugador)
     palabra = list(quitar_tildes(requests.get("https://rae-api.com/api/random?max_length=10").json()["data"]["word"]))
     random.shuffle(palabra)
+    palabra = palabra + random.choices(VOCALES, k= 10 - len(palabra) - random.randint(0, len(palabra)))
+    palabra = palabra + random.choices(CONSONANTES, k=10 - len(palabra))
     return palabra
 
 
@@ -90,9 +92,4 @@ def quitar_tildes(palabra):
 
 
 if __name__ == "__main__":
-    palabra = requests.get("https://rae-api.com/api/random?max_length=10").json()
-    print(palabra)
-    palabra = palabra["data"]["word"]
-    print(palabra)
-    palabra = quitar_tildes(palabra)
-    print(palabra)
+    jugar()
